@@ -10,12 +10,16 @@
 let lobbies = {
 
 };
+module.exports = {
+    createLobby,
+    joinLobby,
+    poll
+}
+async function createLobby(reqBody) {
+    if (!reqBody.lobbyCode || typeof(reqBody.lobbyCode)!="string")
+        throw "invalid lobby code input"
 
-async function createLobby(lobbyCode) {
-    if (typeof(lobbyCode)!="string")
-        throw "invalid input"
-
-
+    return {test: "Ret val"};
 }
 
 async function joinLobby(lobbyCode) {

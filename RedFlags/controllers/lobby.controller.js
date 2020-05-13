@@ -1,4 +1,4 @@
-
+const lobbyService = require("../services/lobby.service");
 module.exports = {
     createLobby,
     joinLobby
@@ -6,7 +6,13 @@ module.exports = {
 // TO create a lobby
 function createLobby(req, res, next) {
     console.log("createLobby in lobby controller");
-    res.json({message: "Lobby created!"})
+    lobbyService.createLobby(req.body)
+        .then((lobbyInfo) => {
+            console.log(lobbyInfo);
+            res.json(lobbyInfo);
+        }).catch((err) => {
+            next(err);
+    });
 }
 // join lobby
 function joinLobby() {
