@@ -1,3 +1,4 @@
 {
-  "connectionString": "mongodb://localhost/Candidates"
+  "connectionString": "mongodb://localhost/Candidates",
+  "secret": "This is an example of how the secret shouldn't be stored."
 }

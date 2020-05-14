@@ -1,11 +1,13 @@
 const lobbyService = require("../services/lobby.service");
 module.exports = {
     createLobby,
-    joinLobby
+    joinLobby,
+    pollLobby
 };
 // TO create a lobby
 function createLobby(req, res, next) {
     console.log("createLobby in lobby controller");
+    // console.log(Date.now());
     lobbyService.createLobby(req.body)
         .then((lobbyInfo) => {
             console.log(lobbyInfo);
@@ -15,6 +17,10 @@ function createLobby(req, res, next) {
     });
 }
 // join lobby
-function joinLobby() {
+function joinLobby(req, res, next) {
     console.log("joinLobby controller called");
+}
+// polling / update lobby state
+function pollLobby(req, res, next) {
+
 }

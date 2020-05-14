@@ -7,5 +7,7 @@ router.put('/lobby', lobbyController.createLobby);
 //join lobby
 router.post('/lobby', lobbyController.joinLobby);
 
+router.get('/lobby', lobbyController.pollLobby);
+
 
 module.exports = router;
