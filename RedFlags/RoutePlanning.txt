@@ -1,11 +1,18 @@
+gameplay:
+	select user to be current "it", rotational basis
+	give everyone 1 minute to play cards 
 front end holds: lobby
-put /lobby
+post /lobby
 	input: {
 		lobbyCode: String	| what others to type to join their game lobby
 		desiredName: String	| their *desired* visible name
 		}
 	response: {
 		failure: String		| und=noproblem, tryJoin=lobby exists, want to join?
+		or
 		jwtToken: jwt.sign()	| jwt of assigned username + lobby code
 		lobby: {}		| the lobby (json)
 		}
+
+get /lobby
+	token

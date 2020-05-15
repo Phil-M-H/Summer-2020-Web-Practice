@@ -3,9 +3,10 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node app.js"
   },
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
@@ -13,6 +14,7 @@
     "http-errors": "~1.6.3",
     "mongoose": "^5.9.13",
     "morgan": "~1.9.1",
+    "nodemon": "^2.0.4",
     "pug": "2.0.0-beta11"
   },
   "devDependencies": {

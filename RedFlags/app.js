@@ -32,7 +32,7 @@ app.use('/api', apiRouter);
 app.use(errorHandler);
 
 const port =
-    process.env.NODE_ENV === "production" ? process.env.PORT || 80 : 3030;
+    process.env.NODE_ENV === "production" ? process.env.PORT || 80 : 8080;
 app.listen(port, function () {
   console.log("Server listening on port " + port);
 });
