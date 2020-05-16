@@ -15,9 +15,10 @@
     "mongoose": "^5.9.13",
     "morgan": "~1.9.1",
     "nodemon": "^2.0.4",
-    "pug": "2.0.0-beta11"
+    "pug": "^2.0.4"
   },
   "devDependencies": {
+    "bcrypt": "^4.0.1",
     "cors": "^2.8.5",
     "jsonwebtoken": "^8.5.1"
   }

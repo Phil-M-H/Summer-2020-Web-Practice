@@ -2,7 +2,8 @@ const lobbyService = require("../services/lobby.service");
 module.exports = {
     createLobby,
     joinLobby,
-    pollLobby
+    pollLobby,
+    startGame
 };
 // TO create a lobby
 function createLobby(req, res, next) {
@@ -18,7 +19,12 @@ function createLobby(req, res, next) {
 }
 // join lobby
 function joinLobby(req, res, next) {
-    console.log("joinLobby controller called");
+    lobbyService.joinLobby(req.body)
+        .then(returner => {
+            res.json(returner);
+        }).catch(err => {
+            next(err);
+    });
 }
 // polling / update lobby state
 function pollLobby(req, res, next) {
@@ -28,4 +34,13 @@ function pollLobby(req, res, next) {
         }).catch(err => {
             next(err);
     });
+}
+
+function startGame(req, res, next) {
+    lobbyService.setLobbyState(req, 1)
+        .then(result => {
+            res.json({result});
+        }).catch(err => {
+            next(err);
+    })
 }

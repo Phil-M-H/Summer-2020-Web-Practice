@@ -1,38 +1,38 @@
 const jwt = require('jsonwebtoken');
 const config = require('../config.json');
-const bcrypt = require('bcryptjs');
+const bcrypt = require('bcrypt');
+
+module.exports = {
+    createLobby,
+    joinLobby,
+    poll,
+    setLobbyState
+}
 /**lobby:{
     lobbyName = String
-    hash: lobby password hash
     rounds: Number
     users: [{username: String, wins: Number}]
+**  hash: lobby password hash
+**  admin: token
+    *paused: Boolean
     whiteDeck: [String]
     redDeck: [String]
+    gameState: Number
     lastAccess: Number //time
 }**/
 const masterWhiteDeck = ["White1", "White2", "White3"];
 const masterRedDeck = ["Red1", "Red2", "Red3"];
 let lobbies = [];
-module.exports = {
-    createLobby,
-    joinLobby,
-    poll
-}
 
-async function initLobby(lobby, lobbyName, username, lobbyPassword, rounds) {
+async function initLobby(lobby, lobbyName, password, username, rounds, token) {
     lobby.lobbyName = lobbyName;
     lobby.users = [{username: username, wins: 0}];
     lobby.rounds = rounds;
     lobby.redDeck = [...masterRedDeck];//todo randomize order
     lobby.whiteDeck = [...masterWhiteDeck];
     lobby.lastAccess = Date.now();
-    await bcrypt.hash(lobbyPassword, 10, function(err, hash) {
-        console.log("HASHING COMPLETE------------------");
-        console.log(hash);
-        lobby.hash = hash;
-        console.log("Lobby hash: ", lobby.hash);
-    });
-    console.log(lobby.hash);
+    lobby.hash = await bcrypt.hash(password, 10);
+    lobby.admin = token;
 }
 function verifyInputCL(reqBody) {
     // console.log(typeof(reqBody.lobbyCode),
@@ -41,7 +41,7 @@ function verifyInputCL(reqBody) {
     //     typeof(reqBody.rounds));
     if (typeof(reqBody.lobbyName) != "string"
         || typeof(reqBody.username) != "string"
-        || typeof(reqBody.lobbyPassword) != "string"
+        || typeof(reqBody.password) != "string"
         || typeof(reqBody.rounds) != "number") {
         throw "Invalid lobby input"
     }
@@ -61,15 +61,58 @@ async function createLobby(reqBody) {
         lobby = {}
         lobbies.push(lobby);
     }
-    await initLobby(lobby, reqBody.lobbyName, reqBody.username, reqBody.password, reqBody.rounds);
-
     const jwtPayload = {sub: reqBody.lobbyName, username: reqBody.username};
     const token = jwt.sign(jwtPayload, config.secret);
 
-    return {lobby, token};
+    await initLobby(lobby, reqBody.lobbyName, reqBody.password, reqBody.username, reqBody.rounds, token);
+
+    const {hash, admin, whiteDeck, redDeck, ...retLobby} = lobby;
+    return {retLobby, token};
 }
 async function joinLobby(reqBody) {
-// {lobbyCode, desiredName}
+// {lobbyName, desiredusername, password}
+    if (!reqBody.lobbyName || !reqBody.desiredusername || !reqBody.password) {
+        throw "Invalid lobby input";
+    }
+    let err;
+    let lobby = lobbies.find(element => {
+        if (element.lobbyName == reqBody.lobbyName) {
+            if (element.users.find(user => user.username == reqBody.desiredusername)) {
+                err = "Username already taken";
+            }
+            return true;
+        }
+    });
+    if (err) {
+        throw err;
+    }
+    if (!lobby) {
+        throw "Attempted to join a lobby that does not exist.";
+    }
+    if (!await bcrypt.compare(reqBody.password, lobby.hash)) {
+        throw "Invalid password to join the lobby.";
+    }
+    lobby.users.push({username: reqBody.desiredusername, wins: 0});
+    lobby.lastAccess = Date.now();
+    const jwtPayload = {sub: reqBody.lobbyName, username: reqBody.desiredusername};
+    const token = jwt.sign(jwtPayload, config.secret);
+
+    const {hash, admin, whiteDeck, redDeck, ...retLobby} = lobby;
+    return {retLobby, token};
+}
+async function setLobbyState(req, gamestate) {
+    let receivedToken;
+    try {
+        receivedToken = req.headers.authorization.split(' ')[1];
+    } catch (err) {
+        throw "Improperly formatted jwt token";
+    }
+    let theirLobby = lobbies.find(lobby => receivedToken == lobby.admin);
+    if (!theirLobby) {
+        throw "You don't own a lobby";
+    }
+
+
 }
 async function poll(req) {//use jwt.verify
     let token;
@@ -85,21 +128,20 @@ async function poll(req) {//use jwt.verify
         }
         given = decoded;
     });
-    if (!(typeof(given.sub)=="string") || !(typeof(given.username)=="string")) {
-        throw "Invalid decoded token";
-    }
     let lobby = lobbies.find(element => {
         if (element.lobbyName == given.sub) {
-            console.log(element);
-            if (element.users.find(user => user.username ==given.username)) {
+            if (element.users.find(user => user.username == given.username)) {
                 return true;
             }
         }
     });
-    if (lobby) {
-        console.log("lobby found", lobby);
+    if (!lobby) {
+        throw "Could not poll lobby: Does Not Exist, or you have been kicked from it.";
     }
-    return 1;
+
+    lobby.lastAccess = Date.now();
+    const {hash, admin, whiteDeck, redDeck, ...retLobby} = lobby;
+    return retLobby;
 }
 /* {
     lastStateChange: Number

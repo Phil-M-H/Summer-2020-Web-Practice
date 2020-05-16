@@ -5,6 +5,9 @@ let lobbyController = require('../controllers/lobby.controller');
 //create lobby
 router.post('/lobby', lobbyController.createLobby);
 
+//Start lobby
+router.post('/lobby/start', lobbyController.startGame);
+
 //join lobby
 router.put('/lobby', lobbyController.joinLobby);
 
