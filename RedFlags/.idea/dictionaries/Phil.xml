@@ -2,6 +2,8 @@
   <dictionary name="Phil">
     <words>
       <w>bcrypt</w>
+      <w>gamestate</w>
+      <w>newgamestate</w>
     </words>
   </dictionary>
 </component>
