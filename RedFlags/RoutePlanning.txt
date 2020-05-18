@@ -2,6 +2,15 @@ gameplay:
 	select user to be current "it", rotational basis
 	give everyone 1 minute to play cards 
 front end holds: lobby
+  0                         1                                   2                                3                      4
+lobby ---------------> play your hand --------------> reveal everyone's plays --------> play red cards --------- > selected user picks
+scrs     dist cards    receive plays
+
+post /lobby/play
+    {
+        played: [String]
+    }
+
 post /lobby
 	input: {
 		lobbyCode: String	| what others to type to join their game lobby

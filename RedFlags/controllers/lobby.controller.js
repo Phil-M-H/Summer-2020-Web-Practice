@@ -37,7 +37,7 @@ function pollLobby(req, res, next) {
 }
 
 function startGame(req, res, next) {
-    lobbyService.advanceLobbyState(req, 1)
+    lobbyService.advanceLobbyState(req)
         .then(result => {
             res.json({result});
         }).catch(err => {
