@@ -6,12 +6,16 @@ module.exports = {
     createLobby,
     joinLobby,
     poll,
-    advanceLobbyState
+    advanceLobbyState,
+    playWhiteCards,
+    playRedFlag,
+    selectWinner
 }
 /**lobby:{
     lobbyName = String
-    rounds: Number
-    users: [{username: String, wins: Number, played: [String], hand: [String]}]
+    roundsPlayed: Number
+    users: [{username: String, wins: Number, played: [String], flag: String, hand: [String], reds: [String]}]
+    chosenOne: Number //corresponding to a user in users(^)
 **  hash: lobby password hash
 **  admin: token
     *paused: Boolean
@@ -33,8 +37,8 @@ function randomize(arr) {
 
 async function initLobby(lobby, lobbyName, password, username, token) {
     lobby.lobbyName = lobbyName;
-    lobby.users = [{username: username, wins: 0, played: [], hand: []}];
-
+    lobby.users = [{username: username, wins: 0, played: [], flag: " ", hand: [], reds: [], chosen: 0}];
+    lobby.roundsPlayed = 0;
     lobby.redDeck = [...masterRedDeck];
     lobby.whiteDeck = [...masterWhiteDeck];
     randomize(lobby.redDeck);
@@ -58,9 +62,8 @@ function verifyInputCL(reqBody) {
 }
 async function createLobby(reqBody) {
     verifyInputCL(reqBody);
-    let response;
     let lobby = lobbies.find((lobby) => {
-        if (lobby.lobbyName && lobby.lobbyName == reqBody.lobbyName)
+        if (lobby.lobbyName && lobby.lobbyName === reqBody.lobbyName)
             return true;
     });
     if (lobby) {//lobby name already exists
@@ -80,29 +83,25 @@ async function createLobby(reqBody) {
     return {retLobby, token};
 }
 async function joinLobby(reqBody) {
-// {lobbyName, desiredusername, password}
+// reqBody = {lobbyName, desiredusername, password}
     if (!reqBody.lobbyName || !reqBody.desiredusername || !reqBody.password) {
         throw "Invalid lobby input";
     }
-    let err;
     let lobby = lobbies.find(element => {
-        if (element.lobbyName == reqBody.lobbyName) {
-            if (element.users.find(user => user.username == reqBody.desiredusername)) {
-                err = "Username already taken";
+        if (element.lobbyName === reqBody.lobbyName) {
+            if (element.users.find(user => user.username === reqBody.desiredusername)) {
+                throw "Username already taken";
             }
             return true;
         }
     });
-    if (err) {
-        throw err;
-    }
     if (!lobby) {
         throw "Attempted to join a lobby that does not exist.";
     }
     if (!await bcrypt.compare(reqBody.password, lobby.hash)) {
         throw "Invalid password to join the lobby.";
-    }
-    lobby.users.push({username: reqBody.desiredusername, wins: 0, hand: [], played: []});
+    }//{username: reqBody.desiredusername, wins: 0, hand: [], played: []}
+    lobby.users.push({username: reqBody.desiredusername, wins: 0, played: [], flag: " ", hand: [], reds: [], chosen: 0});
     lobby.lastAccess = Date.now();
     const jwtPayload = {sub: reqBody.lobbyName, username: reqBody.desiredusername};
     const token = jwt.sign(jwtPayload, config.secret);
@@ -117,31 +116,31 @@ async function advanceLobbyState(req) {
     } catch (err) {
         throw "Improperly formatted jwt token";
     }
-    let theirLobby = lobbies.find(lobby => receivedToken == lobby.admin);
+    let theirLobby = lobbies.find(lobby => receivedToken === lobby.admin);
     if (!theirLobby) {
         throw "You don't own a lobby";
     }
 
     //modify lobby data for the new gamestate
     const gamestate = theirLobby.gamestate;
-    if (gamestate == 3) {
+    if (gamestate === 5) {
         resetLobby(theirLobby);
         theirLobby.gamestate = 0;
-    } else if (gamestate == 0) {
+    } else if (gamestate === 0) {
         distributeDecks(theirLobby);
         theirLobby.gamestate += 1;
     } else {
-        theirLobby.gamestate = 2;
+        theirLobby.gamestate += 1;
 
     }
     //advance gamestate
 }
 function distributeDecks(lobby) {
-    function distributeSingleDeck(deck, lobby, cardsPerPerson) {
+    function distributeSingleDeck(deck, hand, lobby, cardsPerPerson) {
         lobby.users.forEach(user => {
-            user.hand = [];
+            user[hand] = [];
             for (let i = 0; i < cardsPerPerson; i++) {
-                user.hand.push(deck.pop());
+                user[hand].push(deck.pop());
             }
         });
     }
@@ -158,8 +157,8 @@ function distributeDecks(lobby) {
     }
     if (wCPP < 3 || rCPP < 2) {throw "Not enough cards created in the game!";}
 
-    distributeSingleDeck(lobby.whiteDeck, lobby, wCPP);
-    distributeSingleDeck(lobby.redDeck, lobby, wCPP);
+    distributeSingleDeck(lobby.whiteDeck, 'hand', lobby, wCPP);
+    distributeSingleDeck(lobby.redDeck, 'reds', lobby, wCPP);
 
 }
 function resetLobby(lobby) {
@@ -167,14 +166,45 @@ function resetLobby(lobby) {
     lobby.whiteDeck = [...masterWhiteDeck];
     randomize(lobby.redDeck);
     randomize(lobby.whiteDeck);
-
+    lobby.roundsPlayed += 1;
+    lobby.chosen += 1;
+    lobby.chosen = lobby.chosen < lobby.users.length ? lobby.chosen : 0;
     lobby.lastAccess = Date.now();
     lobby.users.forEach(user => {
-        user.wins = 0;
-        user.hand = [];
+        user.handplayed = [];
+        user.flag = " ";
+        user.reds = [];
+        // {username: username, wins: 0, played: [], flag: " ", hand: [], reds: [], roundsPlayed: 0, chosen: 0}
     })
 }
-async function playWhiteCard(req) {
+async function playRedFlag(req) {
+    let {lobby, user} = await findLobbyOfUser(req);
+    if (lobby.gamestate !== 3) {
+        throw "Cannot play red cards during this gamestate";
+    }
+    let prevUser = lobby.users[Math.abs(lobby.users.length-lobby.roundsPlayed)];
+    if (!prevUser) {
+        throw "Logic failure in distributing red flag";
+    }
+    let played = req.body.played;
+    if (!played || typeof(played) != 'string') {
+        throw "Invalid red flag play received.";
+    }
+
+    //verify the cards they are playing are something they have
+    let blanks = 0;
+    user.hand.forEach(card => {
+        if (card === "blank") {
+            blanks += 1;
+        }
+    });
+    if (blanks || user.reds.includes(played)) {
+        prevUser.flag = played;
+    } else {
+        throw "Invalid plays.";
+    }
+}
+async function playWhiteCards(req) {
     let {lobby, user} = await findLobbyOfUser(req);
     if (lobby.gamestate !== 1) {
         throw "Cannot play white cards during this gamestate";
@@ -187,7 +217,7 @@ async function playWhiteCard(req) {
     //verify the cards they are playing are something they have
     let blanks = 0;
     user.hand.forEach(card => {
-        if (card == "blank") {
+        if (card === "blank") {
             blanks += 1;
         }
     });
@@ -197,13 +227,25 @@ async function playWhiteCard(req) {
     if (hits + blanks < 2) {
         throw "Invalid plays.";
     }
-    
+    user.played = played;
 }
 async function poll(req) {//use jwt.verify
     let {lobby, user} = await findLobbyOfUser(req);
     lobby.lastAccess = Date.now();
     const {hash, admin, whiteDeck, redDeck, ...retLobby} = lobby;
     return retLobby;
+}
+async function selectWinner(req) {
+    let {lobby, user} = findLobbyOfUser(req);
+    if (user !== lobby.users[lobby.chosen]) {
+        throw "Not your turn to pick the winner!";
+    }
+    let winner = lobby.users.find(x => x.username === req.params.username);
+    if (!winner) {
+        throw "Lobby does not contain that user";
+    }
+    winner.wins += 1;
+
 }
 async function findLobbyOfUser(req) {
     let token;
@@ -221,8 +263,8 @@ async function findLobbyOfUser(req) {
     });
     let user;
     let lobby = lobbies.find(element => {
-        if (element.lobbyName == given.sub) {
-            user = element.users.find(user => user.username == given.username)
+        if (element.lobbyName === given.sub) {
+            user = element.users.find(user => user.username === given.username)
             if (user) {
                 return true;
             }
@@ -233,6 +275,7 @@ async function findLobbyOfUser(req) {
     }
     return {lobby, user};
 }
+
 /* {
     lastStateChange: Number
         a Date.now() when state last changed

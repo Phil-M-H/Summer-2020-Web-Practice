@@ -3,7 +3,9 @@ module.exports = {
     createLobby,
     joinLobby,
     pollLobby,
-    startGame
+    startGame,
+    playCard,
+    selectWinner
 };
 // TO create a lobby
 function createLobby(req, res, next) {
@@ -43,4 +45,26 @@ function startGame(req, res, next) {
         }).catch(err => {
             next(err);
     });
+}
+
+function selectWinner(req, res, next) {
+
+}
+
+function playCard(req, res, next) {
+    if (req.params.cardType === 'white') {
+        lobbyService.playWhiteCards(req)
+            .then(result => {
+                res.json({result});
+            }).catch(err => {
+                next(err);
+        });
+    } else {
+        lobbyService.playRedFlag(req)
+            .then(result => {
+                res.json({result});
+            }).catch(err => {
+            next(err);
+        });
+    }
 }

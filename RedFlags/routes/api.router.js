@@ -7,7 +7,10 @@ router.post('/lobby', lobbyController.createLobby);
 
 //Start lobby
 router.post('/lobby/start', lobbyController.startGame);
+//For a user to play a card
+router.post('/lobby/play/:cardType', lobbyController.playCard);
 
+router.post('/lobby/pickWinner/:username', lobbyController.selectWinner);
 
 //join lobby
 router.put('/lobby', lobbyController.joinLobby);
