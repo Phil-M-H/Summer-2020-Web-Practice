@@ -123,7 +123,7 @@ async function advanceLobbyState(req) {
 
     //modify lobby data for the new gamestate
     const gamestate = theirLobby.gamestate;
-    if (gamestate === 5) {
+    if (gamestate === 6) {
         resetLobby(theirLobby);
         theirLobby.gamestate = 0;
     } else if (gamestate === 0) {
@@ -131,8 +131,8 @@ async function advanceLobbyState(req) {
         theirLobby.gamestate += 1;
     } else {
         theirLobby.gamestate += 1;
-
     }
+    return theirLobby;
     //advance gamestate
 }
 function distributeDecks(lobby) {
@@ -210,7 +210,7 @@ async function playWhiteCards(req) {
         throw "Cannot play white cards during this gamestate";
     }
     let played = req.body.played;
-    if (!played || !Array.isArray(played) || played.length !== 2 || typeof(played[0]) != 'string' || typeof(played[1]) != 'string') {
+    if (!Array.isArray(played) || played.length !== 2 || typeof(played[0]) != 'string' || typeof(played[1]) != 'string') {
         throw "Invalid plays received.";
     }
 

@@ -2,7 +2,7 @@ gameplay:
 	select user to be current "it", rotational basis
 	give everyone 1 minute to play cards 
 front end holds: lobby
-  0                         1                          2                                3                                  4                        5
+  0                         1                          2                                3               4                   5                        6
 lobby ---------------> play your hand -------> reveal everyone's plays --------> play red cards --> display --------- > selected user picks->display that
 scrs     dist cards    receive plays
 
