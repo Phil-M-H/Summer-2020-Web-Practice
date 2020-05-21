@@ -1,0 +1,46 @@
+.input-form {
+  margin: auto;
+  width: 25%;
+  height: auto;
+  text-align: center;
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: 2px solid black;
+  border-radius: 20px;
+
+}
+#username-input {
+  width: 100%;
+  border-radius: 5px;
+  text-align: center;
+  font-size: larger;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+#lobby-name {
+  width: 85%;
+  border-radius: 5px;
+  text-align: center;
+  font-size: larger;
+  padding-top: 5px;
+  padding-bottom: 5px;
+
+}
+#lobby-password {
+  width: 85%;
+  border-radius: 5px;
+  text-align: center;
+  font-size: larger;
+  padding-top: 5px;
+  padding-bottom: 5px;
+
+}
+.lobby-div {
+  text-align: right;
+}
+div {
+  /*border: 2px dashed maroon;*/
+  padding: 20px;
+}

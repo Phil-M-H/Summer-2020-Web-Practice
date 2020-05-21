@@ -1,15 +1,11 @@
-<div id="input-form">
-  <div class="username-input">
-    <input id="name-input" (keydown.enter)="submit()">
+<div class="input-form">
+  <div class="input-username">
+    <input id="username-input" placeholder="username" (keydown.enter)="submit( )">
   </div>
-  <div class="lobby-section">
-    <div class="lobby-name">
-      <input id="lobby-name-input" (keydown.enter)="submit()">
-    </div>
-    <div class="lobby-name">
-      <input id="lobby-password" (keydown.enter)="submit()" type="password">
-    </div>
+  <div class="input-lobby-name lobby-div">
+    <input id="lobby-name" placeholder="lobby" (keydown.enter)="submit()">
   </div>
-
+  <div class="input-password lobby-div">
+    <input id="lobby-password" placeholder="password" (keydown.enter)="submit()" type="password">
+  </div>
 </div>
-<h1>Another header</h1>
