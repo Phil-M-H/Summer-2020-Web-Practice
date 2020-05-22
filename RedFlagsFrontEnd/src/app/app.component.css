@@ -7,34 +7,21 @@
   top: 40%;
   left: 50%;
   transform: translate(-50%, -50%);
-  border: 2px solid black;
+  border: 5px solid rgba(200,200,200, 0.5);
   border-radius: 20px;
-
+  background-color: rgb(211,211,211);
 }
 #username-input {
   width: 100%;
-  border-radius: 5px;
-  text-align: center;
-  font-size: larger;
-  padding-top: 5px;
-  padding-bottom: 5px;
 }
-#lobby-name {
+#lobby-name, #lobby-password {
   width: 85%;
-  border-radius: 5px;
-  text-align: center;
-  font-size: larger;
-  padding-top: 5px;
-  padding-bottom: 5px;
 
 }
-#lobby-password {
-  width: 85%;
+.user-input-box {
   border-radius: 5px;
   text-align: center;
-  font-size: larger;
-  padding-top: 5px;
-  padding-bottom: 5px;
+  font-size: 26px;
 
 }
 .lobby-div {

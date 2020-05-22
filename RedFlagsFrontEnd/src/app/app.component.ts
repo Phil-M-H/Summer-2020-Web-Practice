@@ -8,7 +8,7 @@ import { Component } from '@angular/core';
 export class AppComponent {
   title = 'RedFlagsFrontEnd';
   counter = 0;
-  submit(): void {
-    console.log('Counter:', this.counter++);
+  submit(event: InputEvent): void {
+    console.log('Event:', event);
   }
 }
