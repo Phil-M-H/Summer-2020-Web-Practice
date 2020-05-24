@@ -7,8 +7,4 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'RedFlagsFrontEnd';
-  counter = 0;
-  submit(event: InputEvent): void {
-    console.log('Event:', event);
-  }
 }
