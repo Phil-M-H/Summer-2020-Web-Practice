@@ -1,21 +1,22 @@
 <div class="centering-div">
-  <form class="example-form">
+  <form class="example-form" #loginForm="ngForm">
 
     <mat-form-field class="example-full-width">
       <mat-label>Username</mat-label>
-      <input matInput placeholder="Ex. Pizza" value="Sushi">
+      <input matInput required placeholder="Ex. Pizza" value="Sushi" [(ngModel)]="username" name="what">
     </mat-form-field>
 
     <mat-form-field class="example-full-width">
       <mat-label>Lobby name</mat-label>
-      <input matInput placeholder="Ex. SmallGroup31!73" value="">
+      <input matInput placeholder="Ex. SmallGroup31!73" value="" [(ngModel)]="lobbyname" name="what">
     </mat-form-field>
 
     <mat-form-field class="example-full-width">
       <mat-label>Password</mat-label>
-      <input matInput placeholder="Ex. Pizza" type="password">
+      <input matInput placeholder="Ex. Pizza" type="password" [(ngModel)]="lobbypassword" name="what">
     </mat-form-field>
 
+    <button mat-flat-button color="primary"type="submit" class="btn btn-success submit-button" (click)="submit()">Submit</button>
   </form>
 </div>
 

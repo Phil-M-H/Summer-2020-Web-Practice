@@ -1,5 +1,6 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {MatInputModule} from '@angular/material/input';
+import {MatButtonModule} from '@angular/material/button';
 
 @Component({
   selector: 'app-login-field',
@@ -7,12 +8,18 @@ import {MatInputModule} from '@angular/material/input';
   styleUrls: ['./login-field.component.css']
 })
 export class LoginFieldComponent implements OnInit {
-  public 
+  @Input() username: string;
+  @Input() lobbyname: string;
+  @Input() lobbypassword: string;
   constructor() { }
 
   ngOnInit(): void {
   }
-  submit(event: InputEvent): void {
-    console.log('Event:', event);
+  submit(): void {
+    console.log('Submitting:');
+    console.log('Username|', this.username);
+    console.log('lobbyname|', this.lobbyname);
+    console.log('Password|', this.lobbypassword);
+
   }
 }

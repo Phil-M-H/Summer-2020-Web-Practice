@@ -2,14 +2,22 @@
   min-width: 150px;
   max-width: 500px;
   width: 100%;
+
+  padding: 20px 25px 20px;
+  border: 2px solid darkred;
+  border-radius: 5px;
 }
 
 .example-full-width {
   width: 100%;
+  padding: 2px;
 }
 .centering-div {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100%;
+}
+.submit-button {
+  width: 100%;
 }
