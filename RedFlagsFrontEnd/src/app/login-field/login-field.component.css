@@ -7,3 +7,9 @@
 .example-full-width {
   width: 100%;
 }
+.centering-div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}

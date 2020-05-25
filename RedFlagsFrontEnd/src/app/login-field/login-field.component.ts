@@ -7,7 +7,7 @@ import {MatInputModule} from '@angular/material/input';
   styleUrls: ['./login-field.component.css']
 })
 export class LoginFieldComponent implements OnInit {
-
+  public 
   constructor() { }
 
   ngOnInit(): void {
