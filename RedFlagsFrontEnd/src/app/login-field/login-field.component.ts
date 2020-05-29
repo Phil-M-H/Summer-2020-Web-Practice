@@ -18,7 +18,7 @@ export class LoginFieldComponent implements OnInit {
   ngOnInit(): void {
   }
   submit(): void {
-    const path = 'http://localhost:3030/';
+    const path = 'http://localhost:3030/api/lobby';
     console.log('Submitting:');
     console.log('Username|', this.username);
     console.log('lobbyname|', this.lobbyname);
@@ -28,7 +28,9 @@ export class LoginFieldComponent implements OnInit {
       lobbyname: this.lobbyname,
       password: this.lobbypassword
     };
-    this.http.post(path, message);
+    this.http.post(path, message).subscribe(data => {
+      console.log(data);
+    });
 
   }
 }

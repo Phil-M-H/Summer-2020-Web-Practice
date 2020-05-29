@@ -67,7 +67,8 @@
           },
           "configurations": {
             "production": {
-              "browserTarget": "RedFlagsFrontEnd:build:production"
+              "browserTarget": "RedFlagsFrontEnd:build:production",
+              "proxyConfig": "proxy.conf.json"
             }
           }
         },
