@@ -2,13 +2,15 @@ import {Component, Input, OnInit} from '@angular/core';
 import {MatInputModule} from '@angular/material/input';
 import {MatButtonModule} from '@angular/material/button';
 import {HttpClient} from '@angular/common/http';
-
+import urlConfig from '../../assets/urlConfig.json';
 
 @Component({
   selector: 'app-login-field',
   templateUrl: './login-field.component.html',
   styleUrls: ['./login-field.component.css']
 })
+const path: string = urlConfig.protocol + urlConfig.domain;
+
 export class LoginFieldComponent implements OnInit {
   @Input() username: string;
   @Input() lobbyname: string;
@@ -18,7 +20,7 @@ export class LoginFieldComponent implements OnInit {
   ngOnInit(): void {
   }
   submit(): void {
-    const path = 'http://localhost:3030/api/lobby';
+
     console.log('Submitting:');
     console.log('Username|', this.username);
     console.log('lobbyname|', this.lobbyname);
