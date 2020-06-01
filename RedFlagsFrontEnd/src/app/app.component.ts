@@ -6,5 +6,13 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'RedFlagsFrontEnd';
+  lobby = 'yayeet';
+
+  setLobby(newLobby) {
+    this.lobby = newLobby;
+  }
+
+  log() {
+    console.log(this.lobby);
+  }
 }

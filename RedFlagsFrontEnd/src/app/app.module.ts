@@ -12,11 +12,13 @@ import {FormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
 
 import { HttpClientModule } from '@angular/common/http';
+import { PlayspaceComponent } from './playspace/playspace.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    LoginFieldComponent
+    LoginFieldComponent,
+    PlayspaceComponent
   ],
   imports: [
     BrowserModule,
