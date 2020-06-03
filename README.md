@@ -17,3 +17,6 @@ Spent multiple days getting the login page *just* right with html & css, before 
 
 ### Week 2 Reflection
 Pretty disappointing week, in regards to this project. Had to focus more on summer employment which is rather abysmal with the coronavirus still circulating. Began to create the front end using Angular. I think it was a lot harder to learn Angular because it has been months since a class briefly went over it, so there was less foundational knowledge I could draw on. Also html & css needed and received heavy refreshers, only for me to find out that it was infinitely better to use the Angular Material library after wasting days getting the html & css *just* right. 
+
+### Week 3
+Started adding in the http requests needed for Red Flag's front end, however I've realized I'm getting burned out on this project. The low social contact going on right now, and the massive civil unrest makes it hard to care about a game like this. Going to focus more on useful or interesting stuff in the upcoming weeks.
