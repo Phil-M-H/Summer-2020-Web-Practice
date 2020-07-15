@@ -1,0 +1,42 @@
+.img-gif {
+
+position: absolute;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+
+animation: animateit 10s infinite;
+}
+.img-gif:not(#red) {
+    opacity: 0;
+}
+@keyframes animateit {
+    from {opacity: 0}
+    5% {opacity: 0}
+    45% {opacity: 1}
+    55% {opacity: 1}
+    95% {opacity: 0}
+    to  {opacity: 0}
+}
+#red {
+    animation-delay: 0s;
+}
+#orange {
+    animation-delay: 1.428s;
+}
+#yellow {
+    animation-delay: 2.857s;
+}
+#green {
+    animation-delay: 4.285s;
+}
+#blue {
+    animation-delay: 5.714s;
+}
+#indigo {
+    animation-delay: 7.142s;
+}
+#violet {
+    animation-delay: 8.571s;
+}
+
