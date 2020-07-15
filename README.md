@@ -21,5 +21,5 @@ Pretty disappointing week, in regards to this project. Had to focus more on summ
 ### Project 2 part 2
 Started adding in the http requests needed for Red Flag's front end, however I've realized I'm getting burned out on this project. The low social contact going on right now, and the massive civil unrest makes it hard to care about a game like this. Going to focus more on useful or interesting stuff in the upcoming weeks.
 
-## CSSGIF Mini-project
+### CSSGIF Mini-project
 Was reviewing HTML using the Enki app (phone app to learn coding), and in a little footnote it said that gifs could be made from still images using only CSS. This project was to explore that a bit. Created a 'gif' from a bunch of pure color images, then animated them to slowly switch between the colors, making it look like a nice gradual transition of the colors of the rainbow. 
