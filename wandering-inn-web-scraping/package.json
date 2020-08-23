@@ -1,0 +1,20 @@
+{
+  "name": "wandering-inn-web-scraping",
+  "version": "1.0.0",
+  "description": "web scraping and making statistics",
+  "main": "index.js",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.3",
+    "cors": "^2.8.5",
+    "firebase": "^7.19.0",
+    "firebase-tools": "^8.9.0",
+    "get-urls": "^9.2.1",
+    "node-fetch": "^2.6.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
