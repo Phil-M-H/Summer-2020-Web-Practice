@@ -1,0 +1,5 @@
+const request = require('request');
+
+request('https://fettblog.eu').pipe(process.stdout);
+
+https://community.risingstack.com/the-definitive-guide-to-object-streams-in-node-js/

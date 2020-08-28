@@ -12,32 +12,42 @@ async function scrape() {
     });
 }
 async function scrapeChapter(index) {
-    const html = await axios.get(data.chapters[i].link);
+    const html = await axios.get(data.chapters[index].link);
     const $ = cheerio.load(html.data);
-    data.chapters[i].time = $('.entry-date').attr('datetime');
+    data.chapters[index].time = $('.entry-date').attr('datetime');
 
-    console.log(data.chapters[i]);
+    console.log(data.chapters[index]);
 }
 
 
-async function scrapeWanderingInn() {
-    await scrape()
-    .then(() => {
-        // data.chapters.some( (chapData, index) => { // TODO try array.some
-        //     if (index > 3) return true;
-        //     scrapeChapter(chapData);
-        // });
-        for (i = 0; i < 3; i++) {
-            scrapeChapter(i);
-        }
+// async function scrapeWanderingInn() {
+//     await scrape()
+//     .then(() => {
+//         // data.chapters.some( (chapData, index) => { // TODO try array.some
+//         //     if (index > 3) return true;
+//         //     scrapeChapter(chapData);
+//         // });
+//         for (i = 0; i < 3; i++) {
+//             scrapeChapter(i);
+//         }
 
-    });
-};
+//     });
+// };
 
-scrapeWanderingInn().then(() => {
+scrape().then(async () => {
+    await Promise.all(data.chapters.map((chapter, index) => {
+        scrapeChapter(index);
+        return chapter;
+    }));
+
+    for await (const chapter of data.chapters) {
+
+    }
+
     const stringifiedData = JSON.stringify(data, null, 4);
     console.log(stringifiedData);
     fs.writeFileSync('output-data.json', stringifiedData);
+
 });
 
 
