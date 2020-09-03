@@ -7,16 +7,17 @@ async function updateTableOfContents() {
         .then( (html) => {
             const $ = cheerio.load(html.data);
             $('p > a').each((i, elem) => {
-                const chapter = $(elem).text();
+                const title = $(elem).text();
                 const link = $(elem).attr('href');
-                data.chapters.push({ chapter, link });
+                data.chapters.push({ title, link });
             });
             const stringified = JSON.stringify(data, null, 4);
             console.log('Starting Table of Contents file write');
-            fs.writeFile('table-of-contents.json', stringified, () => console.log('Table of Contents written to file.'));
+            fs.writeFile('table-of-contents.json', stringified, (err) => err ? console.log('Could not write table of contents') : console.log('Table of Contents written to file.'));
         
         });
 }
+updateTableOfContents();
 
 module.exports = {
     updateTableOfContents
